@@ -1,36 +1,48 @@
 import '../pages/index.css';
+import {renderCards, newCard, newCardForm} from './card.js';
+import {initialCards} from './cards.js';
+import {openModal, closeModal, escClose, handleFormSubmit} from './modal.js';
 
-const cardTemplate = document.getElementById('card-template');
-const placesList = document.querySelector('.places__list');
+const editButton = document.querySelector('.profile__edit-button');
+const addButton = document.querySelector('.profile__add-button');
+const editPopup = document.querySelector('.popup_type_edit');
+const addPopup = document.querySelector('.popup_type_new-card');
+const closeButtons = document.querySelectorAll('.popup__close');
+const popups = document.querySelectorAll('.popup');
 
-function createCard(cardData, removeCard) {
-  const cardElement = cardTemplate.content.querySelector('.card').cloneNode(true);
+const userName = document.querySelector('.profile__title').textContent;
+const userDescription = document.querySelector('.profile__description').textContent;
+const inputName = document.querySelector('.popup__input_type_name');
+const inputDescription = document.querySelector('.popup__input_type_description');
 
-  const cardImage = cardElement.querySelector('.card__image');
-  const cardTitle = cardElement.querySelector('.card__title');
-  const deleteButton = cardElement.querySelector('.card__delete-button');
-
-  cardImage.src = cardData.link;
-  cardImage.alt = cardData.name;
-  cardTitle.textContent = cardData.name;
-
-  deleteButton.addEventListener('click', () => {
-    removeCard(cardElement);
-  });
-
-  return cardElement;
-}
-
-function renderCards(cards) {
-  cards.forEach(cardData => {
-    const cardElement = createCard(cardData, removeCard);
-
-    placesList.appendChild(cardElement);
-  });
-}
-
-function removeCard(card) {
-  card.remove();
-}
+const formElement = document.querySelector('.popup__form');
 
 renderCards(initialCards);
+
+newCardForm.addEventListener('submit', newCard);
+
+editButton.addEventListener('click', () => openModal(editPopup));
+
+addButton.addEventListener('click', () => openModal(addPopup));
+
+closeButtons.forEach(button => {
+  button.addEventListener('click', () => {
+      const popup = button.closest('.popup');
+
+      closeModal(popup);
+  });
+});
+
+window.addEventListener('click', (evt) => {
+  popups.forEach(popup => {
+      if (evt.target === popup) {
+        closeModal(popup);
+      };
+  });
+});
+
+inputName.value = userName;
+inputDescription.value = userDescription;
+
+formElement.addEventListener('submit', handleFormSubmit); 
+
