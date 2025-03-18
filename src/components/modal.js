@@ -1,6 +1,3 @@
-
-
-const openPopup = document.querySelector('popup_is-opened');
 const popups = document.querySelectorAll('.popup');
 
 function openModal(open) {
@@ -16,17 +13,14 @@ function closeModal(close) {
 
 function escClose(evt) {
   if (evt.key === 'Escape') {
-
-    popups.forEach(popup => {
-        closeModal(popup);
-    });
+    closeModal(document.querySelector('.popup_is-opened'));
   };
 };
 
-function handleFormSubmit(evt) {
+function handleEditFormSubmit(evt) {
   evt.preventDefault();
 
-  const popup = document.querySelector('.popup');
+  const editPopup = document.querySelector('.popup_type_edit');
   const inputName = document.querySelector('.popup__input_type_name');
   const inputDescription = document.querySelector('.popup__input_type_description');
   const newName = inputName.value;
@@ -38,7 +32,27 @@ function handleFormSubmit(evt) {
   userName.textContent = newName;
   userDescription.textContent = newDescription;
 
-  closeModal(popup);
+  closeModal(editPopup);
+};
+function buttonClose() {
+  const closeButtons = document.querySelectorAll('.popup__close');
+  closeButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      const popup = button.closest('.popup');
+  
+      closeModal(popup);
+    });
+  });
 }
 
-export {openModal, closeModal, escClose, handleFormSubmit};
+function overlayClose() {
+  popups.forEach(popup => {
+    popup.addEventListener('click', (evt) => {
+      if (evt.target === popup) {
+        closeModal(popup);
+      };
+    });
+  });
+};
+
+export {openModal, closeModal, escClose, handleEditFormSubmit, overlayClose, buttonClose};

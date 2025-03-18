@@ -1,48 +1,47 @@
 import '../pages/index.css';
-import {renderCards, newCard, newCardForm} from './card.js';
+import {renderCards, saveNewCard} from '../components/card.js';
 import {initialCards} from './cards.js';
-import {openModal, closeModal, escClose, handleFormSubmit} from './modal.js';
+import {openModal, handleEditFormSubmit, overlayClose, buttonClose} from '../components/modal.js';
 
 const editButton = document.querySelector('.profile__edit-button');
 const addButton = document.querySelector('.profile__add-button');
 const editPopup = document.querySelector('.popup_type_edit');
 const addPopup = document.querySelector('.popup_type_new-card');
-const closeButtons = document.querySelectorAll('.popup__close');
-const popups = document.querySelectorAll('.popup');
 
 const userName = document.querySelector('.profile__title').textContent;
 const userDescription = document.querySelector('.profile__description').textContent;
 const inputName = document.querySelector('.popup__input_type_name');
 const inputDescription = document.querySelector('.popup__input_type_description');
 
-const formElement = document.querySelector('.popup__form');
+const newCardForm = document.forms['new-place'];
+const editFormElement = document.querySelector('.popup__form');
 
 renderCards(initialCards);
 
-newCardForm.addEventListener('submit', newCard);
+newCardForm.addEventListener('submit', saveNewCard);
 
-editButton.addEventListener('click', () => openModal(editPopup));
+editButton.addEventListener('click', () => {
+  inputName.value = userName;
+  inputDescription.value = userDescription;
+
+  openModal(editPopup);
+});
 
 addButton.addEventListener('click', () => openModal(addPopup));
 
-closeButtons.forEach(button => {
-  button.addEventListener('click', () => {
-      const popup = button.closest('.popup');
+buttonClose();
 
-      closeModal(popup);
-  });
-});
+overlayClose();
 
-window.addEventListener('click', (evt) => {
-  popups.forEach(popup => {
-      if (evt.target === popup) {
-        closeModal(popup);
-      };
-  });
-});
+editFormElement.addEventListener('submit', handleEditFormSubmit); 
 
-inputName.value = userName;
-inputDescription.value = userDescription;
+export function openPopup(imageSrc, imageCaption) {
+  const imagePopup = document.querySelector('.popup_type_image');
+  const image = imagePopup.querySelector('.popup__image');
+  const caption = imagePopup.querySelector('.popup__caption');
 
-formElement.addEventListener('submit', handleFormSubmit); 
+  image.src = imageSrc;
+  caption.textContent = imageCaption;
 
+  openModal(imagePopup);
+};
