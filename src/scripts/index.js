@@ -1,8 +1,10 @@
 import '../pages/index.css';
-import {renderCards, saveNewCard} from '../components/card.js';
+import {createCard, removeCard, toggleLike} from '../components/card.js';
 import {initialCards} from './cards.js';
-import {openModal, handleEditFormSubmit, overlayClose, buttonClose} from '../components/modal.js';
+import {openModal, closeModal, initOverlayClose} from '../components/modal.js';
 
+const popups = document.querySelectorAll('.popup');
+const placesList = document.querySelector('.places__list');
 const editButton = document.querySelector('.profile__edit-button');
 const addButton = document.querySelector('.profile__add-button');
 const editPopup = document.querySelector('.popup_type_edit');
@@ -20,6 +22,8 @@ renderCards(initialCards);
 
 newCardForm.addEventListener('submit', saveNewCard);
 
+editFormElement.addEventListener('submit', handleEditFormSubmit); 
+
 editButton.addEventListener('click', () => {
   inputName.value = userName;
   inputDescription.value = userDescription;
@@ -29,11 +33,66 @@ editButton.addEventListener('click', () => {
 
 addButton.addEventListener('click', () => openModal(addPopup));
 
-buttonClose();
+initCloseButtonsListeners();
 
-overlayClose();
+initOverlayClose(popups);
 
-editFormElement.addEventListener('submit', handleEditFormSubmit); 
+function renderCards(cards) {
+  cards.forEach(cardData => {
+    const cardElement = createCard(cardData, removeCard, toggleLike, openPopup);
+
+    placesList.appendChild(cardElement);
+  });
+};
+
+function saveNewCard(evt) {
+  evt.preventDefault();
+
+  const newCardForm = document.forms['new-place'];
+  const popup = document.querySelector('.popup_type_new-card');
+  const placeName = newCardForm['place-name'].value;
+  const placeLink = newCardForm['link'].value;
+
+  const cardData = {
+    name: placeName,
+    link: placeLink
+  };
+
+  const cardElement = createCard(cardData, removeCard, toggleLike, openPopup);
+  placesList.prepend(cardElement);
+
+  newCardForm.reset();
+  closeModal(popup)
+};
+
+function handleEditFormSubmit(evt) {
+  evt.preventDefault();
+
+  const editPopup = document.querySelector('.popup_type_edit');
+  const inputName = document.querySelector('.popup__input_type_name');
+  const inputDescription = document.querySelector('.popup__input_type_description');
+  const newName = inputName.value;
+  const newDescription = inputDescription.value;
+
+  const userName = document.querySelector('.profile__title');
+  const userDescription = document.querySelector('.profile__description');
+
+  userName.textContent = newName;
+  userDescription.textContent = newDescription;
+
+  closeModal(editPopup);
+};
+
+function initCloseButtonsListeners() {
+  const closeButtons = document.querySelectorAll('.popup__close');
+  closeButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      const popup = button.closest('.popup');
+  
+      closeModal(popup);
+    });
+  });
+};
 
 export function openPopup(imageSrc, imageCaption) {
   const imagePopup = document.querySelector('.popup_type_image');
@@ -45,3 +104,4 @@ export function openPopup(imageSrc, imageCaption) {
 
   openModal(imagePopup);
 };
+
