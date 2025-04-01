@@ -2,6 +2,7 @@ import '../pages/index.css';
 import {createCard, removeCard, toggleLike} from '../components/card.js';
 import {initialCards} from './cards.js';
 import {openModal, closeModal, initOverlayClose} from '../components/modal.js';
+import {enableValidation, clearValidation} from '../components/validation.js';
 
 const popups = document.querySelectorAll('.popup');
 const placesList = document.querySelector('.places__list');
@@ -18,6 +19,17 @@ const inputDescription = document.querySelector('.popup__input_type_description'
 const newCardForm = document.forms['new-place'];
 const editFormElement = document.querySelector('.popup__form');
 
+const validationConfig = {
+  formSelector: '.popup__form',
+  inputSelector: '.popup__input',
+  submitButtonSelector: '.popup__button',
+  inactiveButtonClass: 'button_inactive',
+  inputErrorClass: 'form__input_type_error',
+  errorClass: 'form__input-error_active'
+};
+
+enableValidation(validationConfig);
+
 renderCards(initialCards);
 
 newCardForm.addEventListener('submit', saveNewCard);
@@ -28,10 +40,14 @@ editButton.addEventListener('click', () => {
   inputName.value = userName;
   inputDescription.value = userDescription;
 
+  clearValidation(editPopup, validationConfig);
   openModal(editPopup);
 });
 
-addButton.addEventListener('click', () => openModal(addPopup));
+addButton.addEventListener('click', () => {
+  clearValidation(addPopup, validationConfig);
+  openModal(addPopup)
+});
 
 initCloseButtonsListeners();
 
@@ -104,4 +120,3 @@ export function openPopup(imageSrc, imageCaption) {
 
   openModal(imagePopup);
 };
-

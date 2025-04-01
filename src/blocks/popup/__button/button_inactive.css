@@ -1,0 +1,6 @@
+.button_inactive {
+  color: rgba(0, 0, 0, 0.15);
+  border-color: rgba(0, 0, 0, 0.15);
+  background-color: transparent;
+  pointer-events: none;
+}
