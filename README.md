@@ -1,2 +1,2 @@
-(https://xanxxz.github.io/mesto-project-ff/)
+https://xanxxz.github.io/mesto-project-ff/
 
