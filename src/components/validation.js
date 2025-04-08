@@ -13,9 +13,12 @@ function hideInputError(input, settings) {
 }
 
 function checkInputValidity(input, settings) {
-
   if (!input.validity.valid) {
-    showInputError(input, input.validationMessage || input.dataset.errorMessage, settings);
+    if (input.validity.patternMismatch) {
+      showInputError(input, input.dataset.errorMessage, settings);
+    } else {
+      showInputError(input, input.validationMessage, settings);
+    }
   } else {
     hideInputError(input, settings);
   }
@@ -36,8 +39,8 @@ function setEventListeners(form, settings) {
 function toggleButtonState(inputList, button, settings) {
   const isFormValid = inputList.every(input => input.validity.valid);
   if (isFormValid) {
-      button.classList.remove(settings.inactiveButtonClass);
-      button.disabled = false;
+    button.classList.remove(settings.inactiveButtonClass);
+    button.disabled = false;
   } else {
       button.classList.add(settings.inactiveButtonClass);
       button.disabled = true;

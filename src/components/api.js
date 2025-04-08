@@ -6,20 +6,40 @@ const apiConfig = {
   }
 };
 
-export const fetchUser = 
-  fetch(`${apiConfig.baseUrl}/users/me`, {
+function checkResponse(res) {
+  if (res.ok) {
+    return res.json();
+  }
+  return Promise.reject(`Ошибка ${res.status}`);
+}
+
+
+const fetchUser = () => {
+  return fetch(`${apiConfig.baseUrl}/users/me`, {
     method: 'GET',
     headers: apiConfig.headers
-});
+  })
+};
 
-export const fetchCards = 
-  fetch(`${apiConfig.baseUrl}/cards`, {
+const fetchCards = () => {
+  return fetch(`${apiConfig.baseUrl}/cards`, {
     method: 'GET',
     headers: apiConfig.headers
-});
+  })
+};
 
-export const patchProfileInfo = (newName, newDescription, editButton) => {
-  fetch(`${apiConfig.baseUrl}/users/me`, {
+export const fetchData = () => { 
+  return Promise.all([fetchUser(), fetchCards()])
+  .then(res => {
+    if (res[0].ok || res[1].ok) {
+      return Promise.all([res[0].json(), res[1].json()]);
+    };
+    return Promise.reject(`Ошибка ${res.status}`);
+  })
+};
+
+export const patchProfileInfo = (newName, newDescription) => {
+  return fetch(`${apiConfig.baseUrl}/users/me`, {
     method: 'PATCH',
     headers: apiConfig.headers,
     body: JSON.stringify({
@@ -28,20 +48,12 @@ export const patchProfileInfo = (newName, newDescription, editButton) => {
     })
   })
   .then(res => {
-    if (res.ok) {
-      return res.json();
-    }
+    checkResponse(res);
   })
-  .catch(err => {
-    return Promise.reject(`Ошибка: ${err.status}`);
-  })
-  .finally(() => {
-    editButton.textContent = 'Сохранить';
-  });
 };
 
-export const postCards = (cardName, cardLink, addButton) => {
-  fetch(`${apiConfig.baseUrl}/cards`, {
+export const postCards = (cardName, cardLink) => {
+  return fetch(`${apiConfig.baseUrl}/cards`, {
     method: 'POST',
     headers: apiConfig.headers,
     body: JSON.stringify({
@@ -50,20 +62,12 @@ export const postCards = (cardName, cardLink, addButton) => {
     })
   })
   .then(res => {
-    if (res.ok) {
-      return res.json();
-    }
+    checkResponse(res);
   })
-  .catch(err => {
-    return Promise.reject(`Ошибка: ${err.status}`);
-  })
-  .finally(() => {
-    addButton.textContent = 'Сохранить';
-  });
 };
 
-export const patchProfileAvatar = (avatarLink, changeButton) => {
-  fetch(`${apiConfig.baseUrl}/users/me/avatar`, {
+export const patchProfileAvatar = (avatarLink) => {
+  return fetch(`${apiConfig.baseUrl}/users/me/avatar`, {
     method: 'PATCH',
     headers: apiConfig.headers,
     body: JSON.stringify({
@@ -71,59 +75,32 @@ export const patchProfileAvatar = (avatarLink, changeButton) => {
     })
   })
   .then(res => {
-    if (res.ok) {
-      return res.json();
-    }
+    checkResponse(res);
   })
-  .catch(err => {
-    return Promise.reject(`Ошибка: ${err.status}`);
-  })
-  .finally(() => {
-    changeButton.textContent = 'Сохранить';
-  });
 };
 
 export const deleteCards = (cardId) => {
-  fetch(`${apiConfig.baseUrl}/cards/${cardId}`, {
+  return fetch(`${apiConfig.baseUrl}/cards/${cardId}`, {
     method: 'DELETE',
     headers: apiConfig.headers,
   })
   .then(res => {
-    if (res.ok) {
-      return res.json();
-    }
-  })
-  .catch(err => {
-    return Promise.reject(`Ошибка: ${err.status}`)
+    checkResponse(res);
   })
 };
 
 export const likeCard = (cardId) => {
-  fetch(`${apiConfig.baseUrl}/cards/likes/${cardId}`, {
+  return fetch(`${apiConfig.baseUrl}/cards/likes/${cardId}`, {
     method: 'PUT',
     headers: apiConfig.headers,
   })
-  .then(res => {
-    if (res.ok) {
-      return res.json();
-    }
-  })
-  .catch(err => {
-    return Promise.reject(`Ошибка: ${err.status}`)
-  })
+  .then(res => checkResponse(res));
 };
 
 export const unlikeCard = (cardId) => {
-  fetch(`${apiConfig.baseUrl}/cards/likes/${cardId}`, {
+  return fetch(`${apiConfig.baseUrl}/cards/likes/${cardId}`, {
     method: 'DELETE',
     headers: apiConfig.headers,
   })
-  .then(res => {
-    if (res.ok) {
-      return res.json();
-    }
-  })
-  .catch(err => {
-    return Promise.reject(`Ошибка: ${err.status}`)
-  })
+  .then(res => checkResponse(res));
 };
