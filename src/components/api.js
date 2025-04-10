@@ -82,12 +82,7 @@ export const deleteCards = (cardId) => {
     method: 'DELETE',
     headers: apiConfig.headers
   })
-  .then(res => {
-    if (res.ok) {
-      return res.json();
-    }
-    return Promise.reject(`Ошибка ${res.status}`);
-  });
+  .then(res => checkResponse(res));
 };
 
 export const likeCard = (cardId) => {
