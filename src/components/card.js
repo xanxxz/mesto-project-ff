@@ -17,15 +17,15 @@ function createCard(cardData, userId, removeCard, toggleLike, openPopup, likeCar
     deleteButton.style.display = 'none';
   };
 
-  deleteButton.addEventListener('click', () => removeCard(cardData, deleteConfirm, cardElement));
+  deleteButton.addEventListener('click', () => removeCard(deleteConfirm, cardData, cardElement));
   likeButton.addEventListener('click', () => toggleLike(likeCounter, cardData, likeButton, likeCard, unlikeCard));
   cardImage.addEventListener('click', () => openPopup(cardData.link, cardData.name, cardData.name));
 
   return cardElement;
 };
 
-function removeCard(cardData, deleteConfirm, cardElement) {
-  deleteConfirm(cardData, cardElement);
+function removeCard(deleteConfirm, cardData, cardElement) {
+  deleteConfirm(cardData, cardElement)
 };
 
 function toggleLike(likeCounter, cardData, likeButton, likeCard, unlikeCard) {

@@ -61,9 +61,7 @@ export const postCards = (cardName, cardLink) => {
       link: cardLink
     })
   })
-  .then(res => {
-    checkResponse(res);
-  })
+  .then(res => checkResponse(res));
 };
 
 export const patchProfileAvatar = (avatarLink) => {
@@ -82,11 +80,14 @@ export const patchProfileAvatar = (avatarLink) => {
 export const deleteCards = (cardId) => {
   return fetch(`${apiConfig.baseUrl}/cards/${cardId}`, {
     method: 'DELETE',
-    headers: apiConfig.headers,
+    headers: apiConfig.headers
   })
   .then(res => {
-    checkResponse(res);
-  })
+    if (res.ok) {
+      return res.json();
+    }
+    return Promise.reject(`Ошибка ${res.status}`);
+  });
 };
 
 export const likeCard = (cardId) => {
