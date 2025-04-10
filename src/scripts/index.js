@@ -111,13 +111,13 @@ function saveNewCard(evt) {
 };
 
 function loadNewCard(cardData) {
-  const cardElement = createCard(cardData, userId, removeCard, toggleLike, openPopup, likeCard, unlikeCard, deleteConfirm, openConfirmPopup);
+  const cardElement = createCard(cardData, userId, removeCard, toggleLike, openPopup, likeCard, unlikeCard, deleteConfirm);
   placesList.prepend(cardElement);
 };
 
 function renderCards(cardData) {
   cardData.forEach(cardData => {
-    const cardElement = createCard(cardData, userId, removeCard, toggleLike, openPopup, likeCard, unlikeCard, deleteConfirm, openConfirmPopup);
+    const cardElement = createCard(cardData, userId, removeCard, toggleLike, openPopup, likeCard, unlikeCard, deleteConfirm);
     placesList.appendChild(cardElement);
   });
 };
