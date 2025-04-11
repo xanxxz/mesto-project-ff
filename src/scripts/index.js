@@ -50,15 +50,13 @@ editFormElement.addEventListener('submit', handleEditFormSubmit);
 newAvatarForm.addEventListener('submit', saveNewAvatar);
 
 editButton.addEventListener('click', () => {
-  const inputList = Array.from(editPopup.querySelectorAll(validationConfig.inputSelector));
-  const isFormValid = inputList.every(input => input.validity.valid);
+  inputName.value = userName.textContent;
+  inputDescription.value = userDescription.textContent;
 
   clearValidation(editPopup, validationConfig);
 
-  if (isFormValid) {
-    submitButton.classList.remove(validationConfig.inactiveButtonClass);
-    submitButton.disabled = false;
-  }
+  submitButton.classList.remove(validationConfig.inactiveButtonClass);
+  submitButton.disabled = false;
 
   openModal(editPopup);
 });
